@@ -5,6 +5,7 @@ use bigdecimal::{BigDecimal, Zero};
 use std::error::Error;
 use std::str::FromStr;
 use core::fmt;
+use crate::tx_processor::TxKind::Deposit;
 
 pub type BoxResult<T> = Result<T, Box<dyn Error>>;
 
@@ -121,7 +122,7 @@ impl TxProcessor {
     }
 
     fn dispute(&mut self, tx: Transaction) -> BoxResult<()> {
-        if !self.is_tx_valid(tx.client, tx.tx) {
+        if !self.is_tx_valid(tx.client, tx.tx) || !self.is_deposit(tx.tx) {
             return Ok(())
         }
         let disputed_amount = match self.get_tx_amount(tx.tx)? {
@@ -183,6 +184,13 @@ impl TxProcessor {
     fn is_tx_valid(&self, client: u16, ref_tx: u32) -> bool {
         match self.transactions.get(&ref_tx) {
             Some(tx) => tx.client == client,
+            None => false
+        }
+    }
+
+    fn is_deposit(&self, tx_id: u32) -> bool {
+        match self.transactions.get(&tx_id) {
+            Some(tx) => tx.tx_type == Deposit,
             None => false
         }
     }
