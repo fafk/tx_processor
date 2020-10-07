@@ -160,6 +160,9 @@ impl TxProcessor {
             None => return Ok(()),
         };
         let mut account = self.get_account(tx.client);
+        if account.locked {
+            return Ok(());
+        }
         if !account.disputed.contains(&tx.tx) {
             return Ok(()); // ignoring trying to resolve undisputed tx
         }
