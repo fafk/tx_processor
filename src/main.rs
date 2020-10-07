@@ -134,4 +134,22 @@ mod tests {
         assert_eq!(1, accounts.len());
         assert_eq!("0.0, 1.0, 1.0, false", accounts.get(&1).unwrap().to_string());
     }
+
+    #[test]
+    fn withdrawing_more_than_available() {
+        let res = run_processing("test_data/011.csv").unwrap();
+        let accounts = res.get_accounts();
+        assert_eq!(1, accounts.len());
+        assert_eq!("1.0, 0, 1.0, false", accounts.get(&1).unwrap().to_string());
+    }
+
+    #[test]
+    fn deposits_withdrawals_disputes_and_resolves() {
+        let res = run_processing("test_data/012.csv").unwrap();
+        let accounts = res.get_accounts();
+        assert_eq!(3, accounts.len());
+        assert_eq!("17.25, 0.0, 17.25, false", accounts.get(&1).unwrap().to_string());
+        assert_eq!("9.80, 0.0, 9.80, false", accounts.get(&2).unwrap().to_string());
+        assert_eq!("33.123456, 0.000000, 33.123456, false", accounts.get(&3).unwrap().to_string());
+    }
 }
