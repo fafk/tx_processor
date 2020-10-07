@@ -28,18 +28,19 @@ pub struct Transaction {
     amount: String,
 }
 
-fn serialize_bigint<S>(x: &BigDecimal, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
+/// Turn a BigDecimal into a rounded &str
+fn serialize_bigdec<S>(x: &BigDecimal, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
     s.serialize_str(x.round(4i64).to_string().as_str())
 }
 
 #[derive(Debug, Serialize)]
 pub struct Account {
     client: u16,
-    #[serde(serialize_with = "serialize_bigint")]
+    #[serde(serialize_with = "serialize_bigdec")]
     available: BigDecimal,
-    #[serde(serialize_with = "serialize_bigint")]
+    #[serde(serialize_with = "serialize_bigdec")]
     held: BigDecimal,
-    #[serde(serialize_with = "serialize_bigint")]
+    #[serde(serialize_with = "serialize_bigdec")]
     total: BigDecimal,
     locked: bool,
     #[serde(skip_serializing)]
@@ -96,6 +97,7 @@ impl TxProcessor {
         }
     }
 
+    /// Process a deposit tx by increasing account's balance
     fn deposit(&mut self, tx: Transaction) -> BoxResult<()> {
         let account = self.get_account(tx.client);
         if account.locked {
@@ -107,6 +109,7 @@ impl TxProcessor {
         Ok(())
     }
 
+    /// Process a withdrawal tx by decreasing account balance
     fn withdrawal(&mut self, tx: Transaction) -> BoxResult<()> {
         let account = self.get_account(tx.client);
         if account.locked {
@@ -121,6 +124,7 @@ impl TxProcessor {
         Ok(())
     }
 
+    /// File a dispute over a deposit transaction
     fn dispute(&mut self, tx: Transaction) -> BoxResult<()> {
         if !self.is_tx_valid(tx.client, tx.tx) || !self.is_deposit(tx.tx) {
             return Ok(())
@@ -139,6 +143,7 @@ impl TxProcessor {
         Ok(())
     }
 
+    /// Resolve a disputed transaction by withdrawing the dispute
     fn resolve(&mut self, tx: Transaction) -> BoxResult<()> {
         if !self.is_tx_valid(tx.client, tx.tx) {
             return Ok(());
@@ -157,6 +162,7 @@ impl TxProcessor {
         Ok(())
     }
 
+    /// Chargeback for a disputed deposit transaction
     fn chargeback(&mut self, tx: Transaction) -> BoxResult<()> {
         if !self.is_tx_valid(tx.client, tx.tx) {
             return Ok(());
