@@ -127,4 +127,11 @@ mod tests {
         assert_eq!("33.123456, 0, 33.123456, false", accounts.get(&3).unwrap().to_string());
     }
 
+    #[test]
+    fn multiple_disputes_of_one_tx() {
+        let res = run_processing("test_data/010.csv").unwrap();
+        let accounts = res.get_accounts();
+        assert_eq!(1, accounts.len());
+        assert_eq!("0.0, 1.0, 1.0, false", accounts.get(&1).unwrap().to_string());
+    }
 }

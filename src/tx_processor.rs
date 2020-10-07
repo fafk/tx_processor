@@ -77,10 +77,13 @@ impl TxProcessor {
     }
 
     pub fn process_tx(&mut self, tx: Transaction) -> BoxResult<()> {
-        if !tx.amount.is_empty() {
-            if BigDecimal::from_str(tx.amount.as_str())? < BigDecimal::zero() {
-                return Ok(()); // ignore records with negative amounts
-            }
+        match tx.tx_type { // make sure amount is defined and non-negative for types with amount
+            TxKind::Withdrawal | TxKind::Deposit => {
+                if BigDecimal::from_str(tx.amount.as_str())? < BigDecimal::zero() {
+                    return Ok(()); // ignore records with negative amounts
+                }
+            },
+            _ => {},
         }
 
         match tx.tx_type {
@@ -119,14 +122,16 @@ impl TxProcessor {
 
     fn dispute(&mut self, tx: Transaction) -> BoxResult<()> {
         if !self.is_tx_valid(tx.client, tx.tx) {
-            return Ok(());
+            return Ok(())
         }
         let disputed_amount = match self.get_tx_amount(tx.tx)? {
             Some(amount) => amount,
             None => return Ok(()),
         };
         let account = self.get_account(tx.client);
-
+        if account.disputed.contains(&tx.tx) {
+            return Ok(()) // already being disputed, nothing to do
+        }
         account.disputed.insert(tx.tx);
         account.held += &disputed_amount;
         account.available -= disputed_amount;

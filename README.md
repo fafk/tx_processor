@@ -28,3 +28,4 @@ to file a dispute and resolve that dispute
 * It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback]);
 such person is considered to owe money to the system owner
 * Unit tests in `main.rs` _and_ integration tests in `tests/`
+* Disputing an already disputed tx does nothing 
