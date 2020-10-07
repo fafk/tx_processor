@@ -16,7 +16,7 @@ Output goes to standard output. ` > accounts.csv` in this example redirect it to
 
 #### Highlights
 
-* BigDecimal - important to deal with floting point precision when dealing with money
+* BigDecimal - important to deal with floating point precision when dealing with money
 * Precision - 4 places after decimal (gets rounded depending on the 5th digit after zero)
 * Rejects negative amounts
 * If deposit/resolve/chargeback's client is different from the client of the referred tx, such tx
