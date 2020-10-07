@@ -3,7 +3,7 @@
 Takes in a bunch of transactions of users and computes the final state for all users. 
 
 #### Tests
-`$ cargo test`
+`$ cargo build && cargo test`
 
 #### Usage
 
@@ -16,8 +16,8 @@ Output goes to standard output. ` > accounts.csv` in this example redirect it to
 
 #### Highlights
 
-* BigDecimal - important to deal with floating point precision when dealing with money
-* Precision - 4 places after decimal (gets rounded depending on the 5th digit after zero)
+* BigDecimal - important to deal with floating point eccentricities (paramount when dealing with money)
+* Precision - 4 places after decimal point (gets rounded depending on the 5th digit after zero)
 * Rejects negative amounts
 * If deposit/resolve/chargeback's client is different from the client of the referred tx, such tx
 is considered erroneous and doesn't get processed 
@@ -25,7 +25,11 @@ is considered erroneous and doesn't get processed
 * Deposits, withdrawals and chargebacks are not possible for frozen accounts, but it's possible
 to file a dispute and resolve that dispute
 * I/O, parsing and other errors get propagated and printed out and the program exits
-* It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback]);
+* It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback])
 such person is considered to owe money to the system owner
 * Unit tests in `main.rs` _and_ integration tests in `tests/`
 * Disputing an already disputed tx does nothing 
+
+#### Things to improve
+
+* Prettify errors 
