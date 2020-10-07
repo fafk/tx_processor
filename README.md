@@ -1,4 +1,4 @@
-### A simple transactioni processor utility
+### A simple transaction processor utility
 
 Takes in a bunch of transactions of users and computes the final state for all users. 
 
