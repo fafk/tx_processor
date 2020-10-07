@@ -1,3 +1,29 @@
-* BigDecimal
-* proper error codes
-* precision - to 4 digits (5th gets rounded up)
+### A simple transactioni processor utility
+
+Takes in a bunch of transactions of users and computes the final state for all users. 
+
+#### Tests
+`$ cargo test`
+
+#### Usage
+
+`cargo run -- transactions.csv > accounts.csv`
+
+Where `transaction.csv` is the input containing a batch of transaction to process. See the contents
+of the `test_data` folder for an example.
+
+Output goes to standard output. ` > accounts.csv` in this example redirect it to a file.
+
+#### Highlights
+
+* BigDecimal - important to deal with floting point precision when dealing with money
+* Precision - 4 places after decimal (gets rounded depending on the 5th digit after zero)
+* Rejects negative amounts
+* If deposit/resolve/chargeback's client is different from the client of the referred tx, such tx
+is considered erroneous and doesn't get processed 
+* Frozen/locked account never get unlocked; presumably needs to be inspected by a human agent
+* Deposits, withdrawals and chargebacks are not possible for frozen accounts, but it's possible
+to file a dispute and resolve that dispute
+* I/O, parsing and other errors get propagated and printed out and the program exits
+* It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback]);
+such person is considered to owe money to the system owner
