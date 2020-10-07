@@ -48,6 +48,7 @@ fn print_serialized(tx_processor: TxProcessor) -> BoxResult<()> {
     for (_i, account) in tx_processor.get_accounts() {
         wtr.serialize(account)?;
     }
+
     wtr.flush()?;
     Ok(())
 }
@@ -84,7 +85,7 @@ mod tests {
     }
 
     #[test]
-    fn dispute_to_zero_with_with_chargeback() { // TODO mention in README
+    fn dispute_to_zero_with_with_chargeback() {
         let res = run_processing("test_data/005.csv").unwrap();
         let accounts = res.get_accounts();
         assert_eq!(1, accounts.len());
