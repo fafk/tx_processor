@@ -25,7 +25,7 @@ is considered erroneous and doesn't get processed
 * Deposits, withdrawals and chargebacks are not possible for frozen accounts, but it's possible
 to file a dispute and resolve that dispute
 * I/O, parsing and other errors get propagated and printed out and the program exits
-* It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback])
+* It's possible to end up with negative balance (deposit -> withdraw -> dispute [-> chargeback]);
 such person is considered to owe money to the system owner
 * Unit tests in `main.rs` _and_ integration tests in `tests/`
 * Disputing an already disputed tx does nothing 
