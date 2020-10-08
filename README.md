@@ -30,6 +30,7 @@ such person is considered to owe money to the system owner
 * Unit tests in `main.rs` _and_ integration tests in `tests/`
 * Disputing an already disputed tx does nothing 
 * It's not possible to dispute a withdrawal as it's not compatible with the specs
+* Throughput is about 25000 tx/s (2,9 GHz Quad-Core Intel Core i7; 2133 MHz LPDDR3)
 
 #### Things to improve
 
